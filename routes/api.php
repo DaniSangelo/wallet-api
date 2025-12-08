@@ -14,6 +14,7 @@ Route::prefix('users')->group(function () {
         Route::patch('/balance/add', [WalletController::class, 'addBalance']);
         Route::patch('/balance/withdraw', [WalletController::class, 'withdraw']);
         Route::post('/balance/transfer', [WalletController::class, 'transfer']);
+        Route::get('/transactions', [WalletController::class, 'transactions']);
     });
 });
 

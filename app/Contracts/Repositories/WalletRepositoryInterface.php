@@ -4,6 +4,7 @@ namespace App\Contracts\Repositories;
 
 use App\DTO\CreateWalletDTO;
 use App\Models\Wallet;
+use Illuminate\Database\Eloquent\Collection;
 
 interface WalletRepositoryInterface
 {
@@ -12,4 +13,5 @@ interface WalletRepositoryInterface
     public function restore(Wallet $wallet): Wallet;
     public function getBalance(int $userId): ?Wallet;
     public function updateBalance(Wallet $wallet, float $amount): Wallet;
+    public function transactions(int $userId): mixed;
 }

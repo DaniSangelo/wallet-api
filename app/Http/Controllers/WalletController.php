@@ -87,4 +87,17 @@ class WalletController extends BaseController
             'data' => null,
         ]);
     }
+
+    public function transactions(Request $request)
+    {
+        $userId = $request->user()->id;
+        $transactions = $this->walletService->transactions($userId);
+        return $this->success('Transactions retrieved', [
+            'success' => true,
+            'message' => 'Transactions retrieved',
+            'data' => [
+                $transactions,
+            ],
+        ]);
+    }
 }
