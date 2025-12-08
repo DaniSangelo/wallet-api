@@ -11,6 +11,8 @@ class Wallet extends Model
     /** @use HasFactory<\Database\Factories\WalletFactory> */
     use HasFactory, SoftDeletes;
 
+    protected $fillable = ['user_id', 'account', 'balance'];
+
     public function user()
     {
         return $this->belongsTo(User::class);
