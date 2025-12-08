@@ -2,7 +2,10 @@
 
 namespace Database\Seeders;
 
+use App\Models\Transaction;
 use App\Models\User;
+use App\Models\Wallet;
+use Database\Factories\WalletFactory;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 
@@ -15,11 +18,23 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-        // User::factory(10)->create();
+        $users = User::factory()
+            ->count(10)
+            ->create();
 
-        User::factory()->create([
-            'name' => 'Test User',
-            'email' => 'test@example.com',
-        ]);
+        foreach($users as $user) {
+            $wallet = Wallet::factory()->create(['user_id' => $user->id]);
+            $userIds = $users->pluck('id');
+            $othersUserIds = array_filter($users->pluck('id')->toArray(), function ($item) use ($user) {
+                return $item !== $user->id;
+            });
+
+            Transaction::factory()
+                ->count(rand(1,200))
+                ->create([
+                    'wallet_id' => $wallet->id,
+                    'user_id_from' => $userIds->random() != $user->id ? $userIds->random() : $othersUserIds[0],
+                ]);
+        }
     }
 }
