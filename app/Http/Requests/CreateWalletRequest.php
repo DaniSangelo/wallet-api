@@ -24,6 +24,14 @@ class CreateWalletRequest extends FormRequest
     {
         return [
             'account' => ['required', 'string', Rule::unique('wallets', 'account')],
+            'user_id' => ['nullable', 'integer'],
         ];
+    }
+
+    public function prepareForValidation()
+    {
+        $this->merge([
+            'user_id' =>$this->user()->id,
+        ]);
     }
 }

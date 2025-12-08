@@ -21,7 +21,7 @@ class WalletController extends BaseController
 
     public function create(CreateWalletRequest $request)
     {
-        $userId = 1; //todo: get from auth middleare
+        $userId = $request->input('user_id');
         $createWalletDto = CreateWalletDTO::createFromArray([
             'user_id' => $userId,
             'account' => $request->account,
@@ -33,7 +33,7 @@ class WalletController extends BaseController
 
     public function balance(Request $request)
     {
-        $userId = 1; //todo: get from auth middleware
+        $userId = $request->user()->id;
         $wallet = $this->walletService->getBalance($userId);
         return $this->success('Wallet balance retrieved successfully', [
             'success' => true,
@@ -46,7 +46,7 @@ class WalletController extends BaseController
 
     public function addBalance(UpdateWalletBalanceRequest $request)
     {
-        $userId = 1; //todo: get from auth middleware
+        $userId = $request->user()->id;
         $wallet = $this->walletService->addBalance($userId, $request->amount);
         return $this->success('Wallet balance retrieved successfully', [
             'success' => true,
@@ -64,7 +64,7 @@ class WalletController extends BaseController
         ]);
 
         $amount = $request->input('amount');
-        $userId = 1; //todo: get from auth middleware
+        $userId = $request->user()->id;
         $wallet = $this->walletService->withdraw($userId, $amount);
         return $this->success('Withdraw successful', [
             'success' => true,
@@ -78,7 +78,7 @@ class WalletController extends BaseController
     public function transfer(TransferAmountRequest $request)
     {
         $data = $request->validated();
-        $data['user_id'] = 1;
+        $data['user_id'] = $request->user()->id;
 
         $this->walletService->transfer(TransferAmountDTO::createFromArray($data));
         return $this->success('Transfer successful', [
