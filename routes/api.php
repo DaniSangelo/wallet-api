@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\AuthController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\WalletController;
 use Illuminate\Support\Facades\Route;
@@ -13,5 +14,10 @@ Route::prefix('users')->group(function () {
         Route::patch('/balance/withdraw', [WalletController::class, 'withdraw']);
         Route::post('/balance/transfer', [WalletController::class, 'transfer']);
     })->middleware([]); //todo: add auth middlware
+});
+
+Route::prefix('auth')->group(function () {
+    Route::post('/login', [AuthController::class, 'login']);
+    Route::post('/logout', [AuthController::class, 'logout']);
 });
 
