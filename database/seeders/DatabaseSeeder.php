@@ -33,7 +33,7 @@ class DatabaseSeeder extends Seeder
                 ->count(rand(1,200))
                 ->create([
                     'wallet_id' => $wallet->id,
-                    'user_id_from' => $userIds->random() != $user->id ? $userIds->random() : $othersUserIds[0],
+                    'user_id_to' => $userIds->random() != $user->id ? $userIds->random() : $othersUserIds[0],
                 ]);
         }
     }

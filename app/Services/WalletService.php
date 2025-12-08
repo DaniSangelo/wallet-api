@@ -2,22 +2,30 @@
 
 namespace App\Services;
 
+use App\Contracts\Repositories\TransactionRepositoryInterface;
 use App\Contracts\Repositories\UserRepositoryInterface;
 use App\Contracts\Repositories\WalletRepositoryInterface;
+use App\DTO\CreateTransactionDTO;
 use App\DTO\CreateWalletDTO;
 use App\DTO\TransferAmountDTO;
 use App\Models\Wallet;
+use App\TransactionTypeEnum;
 use Exception;
 
 class WalletService
 {
     public WalletRepositoryInterface $walletRepository;
     public UserRepositoryInterface $userRepository;
+    public TransactionRepositoryInterface $transactionRepository;
 
-    public function __construct(WalletRepositoryInterface $walletRepository, UserRepositoryInterface $userRepository)
-    {
+    public function __construct(
+        WalletRepositoryInterface $walletRepository,
+        UserRepositoryInterface $userRepository,
+        TransactionRepositoryInterface $transactionRepository
+    ) {
         $this->walletRepository = $walletRepository;
         $this->userRepository = $userRepository;
+        $this->transactionRepository = $transactionRepository;
     }
 
     public function create(CreateWalletDTO $data)
@@ -41,9 +49,16 @@ class WalletService
         if (blank($wallet) || $wallet->trashed()) {
             throw new Exception('Wallet does not exist or is deleted');
         }
-
+        $transactionDto = CreateTransactionDTO::createFromArray([
+            'user_id_to' => $userId,
+            'wallet_id' => $wallet->id,
+            'user_id' => $userId,
+            'type' => TransactionTypeEnum::CREDIT,
+            'amount' => $amount,
+        ]);
+        $this->transactionRepository->addTransaction($transactionDto);
         return $this->walletRepository->updateBalance($wallet, $amount);
-        //todo: update transaction history
+        
     }
 
     public function withdraw(int $userId, float $amount): ?Wallet
@@ -53,8 +68,15 @@ class WalletService
             throw new Exception('Not enough balance');
         }
 
+        $transactionDto = CreateTransactionDTO::createFromArray([
+            'user_id_to' => $userId,
+            'wallet_id' => $wallet->id,
+            'user_id' => $userId,
+            'type' => TransactionTypeEnum::WITHDRAW,
+            'amount' => $amount,
+        ]);
+        $this->transactionRepository->addTransaction($transactionDto);
         return $this->walletRepository->updateBalance($wallet, $amount * -1);
-        //todo: update transaction history
     }
 
     private function hasEnoughtBalance(Wallet $wallet, $amount): bool
@@ -68,9 +90,9 @@ class WalletService
 
     public function transfer(TransferAmountDTO $data)
     {
-        $to_user_id = $this->userRepository->getByEmail($data->to_email)->id;
+        $user_id_to = $this->userRepository->getByEmail($data->to_email)->id;
 
-        $wallet = $this->walletRepository->alreadyHasWallet($to_user_id);
+        $wallet = $this->walletRepository->alreadyHasWallet($user_id_to);
         if (blank($wallet) || $wallet->trashed()) {
             throw new Exception('Destinatary wallet does not exist or is deleted');
         }
@@ -82,9 +104,21 @@ class WalletService
         }
 
         $fromWallet = $this->walletRepository->updateBalance($fromWallet, $data->amount * -1);
-        //todo: update transaction history
+        $transactionDto = CreateTransactionDTO::createFromArray([
+            'user_id_to' => $user_id_to,
+            'wallet_id' => $wallet->id,
+            'user_id' => $wallet->user_id,
+            'type' => TransactionTypeEnum::DEBIT,
+            'amount' => $data->amount,
+        ]);
+        $this->transactionRepository->addTransaction($transactionDto);
+
         $wallet = $this->walletRepository->updateBalance($wallet, $data->amount);
-        //todo: update transaction history
         return;
+    }
+
+    public function transactions(int $userId)
+    {
+        return $this->walletRepository->transactions($userId);
     }
 }

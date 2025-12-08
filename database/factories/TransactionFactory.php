@@ -26,7 +26,7 @@ class TransactionFactory extends Factory
             'wallet_id' => Wallet::factory(),
             'amount' => fake()->randomFloat(2, 0, 5000),
             'type' => $arr[rand(0,2)],
-            'user_id_from' => User::factory(),
+            'user_id_to' => User::factory(),
         ];
     }
 }
