@@ -5,6 +5,7 @@ namespace App\Services;
 use App\Contracts\Repositories\WalletRepositoryInterface;
 use App\DTO\CreateWalletDTO;
 use App\Models\Wallet;
+use Exception;
 
 class WalletService
 {
@@ -28,5 +29,17 @@ class WalletService
     public function getBalance(int $userId): ?Wallet
     {
         return $this->walletRepository->getBalance($userId);
+    }
+
+    public function addBalance(int $userId, float $amount): ?Wallet
+    {
+        //todo: check if wallet exists (no trashed)
+        $wallet = $this->walletRepository->alreadyHasWallet($userId);
+        if (blank($wallet) || $wallet->trashed()) {
+            throw new Exception('Wallet does not exist or is deleted');
+        }
+
+        return $this->walletRepository->updateBalance($wallet, $amount);
+        //todo: update transaction history
     }
 }

@@ -11,4 +11,5 @@ interface WalletRepositoryInterface
     public function alreadyHasWallet(int $userId): ?Wallet;
     public function restore(Wallet $wallet): Wallet;
     public function getBalance(int $userId): ?Wallet;
+    public function updateBalance(Wallet $wallet, float $amount): Wallet;
 }

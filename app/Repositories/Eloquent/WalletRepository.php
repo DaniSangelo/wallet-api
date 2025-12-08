@@ -28,4 +28,11 @@ class WalletRepository implements WalletRepositoryInterface
     {
         return Wallet::where('user_id', $userId)->select('balance')->first();
     }
+
+    public function updateBalance(Wallet $wallet, float $amount): Wallet
+    {
+        $wallet->balance += $amount;
+        $wallet->save();
+        return $wallet->refresh();
+    }
 }

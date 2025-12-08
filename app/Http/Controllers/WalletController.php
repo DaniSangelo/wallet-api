@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\DTO\CreateWalletDTO;
 use App\Http\Requests\CreateWalletRequest;
+use App\Http\Requests\UpdateWalletBalanceRequest;
 use App\Services\WalletService;
 use Illuminate\Http\Request;
 
@@ -32,6 +33,19 @@ class WalletController extends BaseController
     {
         $userId = 1; //todo: get from auth middleware
         $wallet = $this->walletService->getBalance($userId);
+        return $this->success('Wallet balance retrieved successfully', [
+            'success' => true,
+            'message' => 'Wallet balance retrieved successfully',
+            'data' => [
+                'balance' => $wallet->balance,
+            ],
+        ]);
+    }
+
+    public function addBalance(UpdateWalletBalanceRequest $request)
+    {
+        $userId = 1; //todo: get from auth middleware
+        $wallet = $this->walletService->addBalance($userId, $request->amount);
         return $this->success('Wallet balance retrieved successfully', [
             'success' => true,
             'message' => 'Wallet balance retrieved successfully',
