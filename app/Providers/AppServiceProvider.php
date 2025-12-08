@@ -2,6 +2,8 @@
 
 namespace App\Providers;
 
+use App\Contracts\Lib\Encryptor;
+use App\Lib\LaravelHashEncryptor;
 use Illuminate\Support\ServiceProvider;
 
 class AppServiceProvider extends ServiceProvider
@@ -11,7 +13,7 @@ class AppServiceProvider extends ServiceProvider
      */
     public function register(): void
     {
-        //
+        app()->bind(Encryptor::class, LaravelHashEncryptor::class);
     }
 
     /**
