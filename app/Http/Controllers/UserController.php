@@ -3,21 +3,23 @@
 namespace App\Http\Controllers;
 
 use App\Contracts\Lib\Encryptor;
+use App\Contracts\Services\AuthInterface;
 use App\DTO\CreateUserDTO;
 use App\Http\Requests\CreateUserRequest;
 use App\Services\UserService;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 
 class UserController extends BaseController
 {
     public Encryptor $encryptor;
     public UserService $userService;
+    public AuthInterface $authService;
 
-    public function __construct(Encryptor $encryptor, UserService $userService)
+    public function __construct(Encryptor $encryptor, UserService $userService, AuthInterface $authService)
     {
         $this->encryptor = $encryptor;
         $this->userService = $userService;
+        $this->authService = $authService;
     }
 
     public function create(CreateUserRequest $request)
@@ -30,11 +32,12 @@ class UserController extends BaseController
 
         Log::info('End - registering a new user');
 
+        $token = $this->authService->createToken($user);
+
         return $this->success('User registered successfully', [
             'success' => true,
             'message' => 'User registered successfully',
-            //todo: return access_token on user creation
-            'data' => null,
+            'data' => ['access_token' => $token],
         ]);
     }
 }

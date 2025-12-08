@@ -6,6 +6,7 @@ use App\Contracts\Services\AuthInterface;
 use App\DTO\UserCredentialsDTO;
 use App\Http\Requests\LoginRequest;
 use Illuminate\Http\Request;
+use Symfony\Component\HttpFoundation\Response;
 
 class AuthController extends BaseController
 {
@@ -26,6 +27,13 @@ class AuthController extends BaseController
 
     public function logout() 
     {
-        
+        $this->authService->logout(auth()->user());
+        return $this->success('Logout successful', [], Response::HTTP_NO_CONTENT);
+    }
+
+    public function refresh()
+    {
+        $token = $this->authService->refresh(auth()->user());
+        return $this->success('Refresh token successful', ['success' => true, 'message' => 'Refresh token successful', 'data' => ['access_token' => $token]]);
     }
 }
