@@ -54,4 +54,22 @@ class WalletController extends BaseController
             ],
         ]);
     }
+
+    public function withdraw(Request $request)
+    {
+        $request->validate([
+            'amount' => ['required', 'numeric', 'min:1'],
+        ]);
+
+        $amount = $request->input('amount');
+        $userId = 1; //todo: get from auth middleware
+        $wallet = $this->walletService->withdraw($userId, $amount);
+        return $this->success('Withdraw successful', [
+            'success' => true,
+            'message' => 'Withdraw successful',
+            'data' => [
+                'balance' => $wallet->balance,
+            ],
+        ]);
+    }
 }

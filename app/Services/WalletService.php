@@ -33,7 +33,6 @@ class WalletService
 
     public function addBalance(int $userId, float $amount): ?Wallet
     {
-        //todo: check if wallet exists (no trashed)
         $wallet = $this->walletRepository->alreadyHasWallet($userId);
         if (blank($wallet) || $wallet->trashed()) {
             throw new Exception('Wallet does not exist or is deleted');
@@ -41,5 +40,25 @@ class WalletService
 
         return $this->walletRepository->updateBalance($wallet, $amount);
         //todo: update transaction history
+    }
+
+    public function withdraw(int $userId, float $amount): ?Wallet
+    {
+        $wallet = $this->walletRepository->alreadyHasWallet($userId);
+        if (!$this->hasEnoughtBalance($wallet, $amount)) {
+            throw new Exception('Not enough balance');
+        }
+
+        return $this->walletRepository->updateBalance($wallet, $amount * -1);
+        //todo: update transaction history
+    }
+
+    private function hasEnoughtBalance(Wallet $wallet, $amount): bool
+    {
+        if (blank($wallet) || $wallet->trashed()) {
+            throw new Exception('Wallet does not exist or is deleted');
+        }
+
+        return $wallet->balance >= $amount;
     }
 }
