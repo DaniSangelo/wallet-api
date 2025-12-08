@@ -27,6 +27,7 @@ class JwtAuthService implements AuthInterface
     {
         try {
             $user = JWTAuth::parseToken()->authenticate();
+            if (!$user) return null;
             Auth::setUser($user);
             return Auth::user();
         } catch (\Exception $e) {
