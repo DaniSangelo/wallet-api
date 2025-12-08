@@ -10,6 +10,6 @@ class TransactionRepository implements TransactionRepositoryInterface
 {
     public function addTransaction(CreateTransactionDTO $createTransactionDTO)
     {
-        Transaction::create($createTransactionDTO->toArray());
+        Transaction::create($createTransactionDTO->toArray())->save();
     }
 }

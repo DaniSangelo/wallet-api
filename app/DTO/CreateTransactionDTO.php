@@ -10,7 +10,7 @@ class CreateTransactionDTO extends DTO
     public int $wallet_id;
     public string $user_id;
     public float $amount;
-    public TransactionTypeEnum $type;
+    public string $type;
 
     private function __construct(array $data)
     {

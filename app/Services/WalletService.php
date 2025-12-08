@@ -106,8 +106,8 @@ class WalletService
         $fromWallet = $this->walletRepository->updateBalance($fromWallet, $data->amount * -1);
         $transactionDto = CreateTransactionDTO::createFromArray([
             'user_id_to' => $user_id_to,
-            'wallet_id' => $wallet->id,
-            'user_id' => $wallet->user_id,
+            'wallet_id' => $fromWallet->id,
+            'user_id' => $fromWallet->user_id,
             'type' => TransactionTypeEnum::DEBIT,
             'amount' => $data->amount,
         ]);
