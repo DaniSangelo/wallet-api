@@ -23,4 +23,9 @@ class WalletRepository implements WalletRepositoryInterface
         $wallet->restore();
         return $wallet->refresh();
     }
+
+    public function getBalance(int $userId): ?Wallet
+    {
+        return Wallet::where('user_id', $userId)->select('balance')->first();
+    }
 }

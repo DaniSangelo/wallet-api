@@ -4,6 +4,7 @@ namespace App\Services;
 
 use App\Contracts\Repositories\WalletRepositoryInterface;
 use App\DTO\CreateWalletDTO;
+use App\Models\Wallet;
 
 class WalletService
 {
@@ -22,5 +23,10 @@ class WalletService
         }
 
         return $this->walletRepository->create($data);
+    }
+
+    public function getBalance(int $userId): ?Wallet
+    {
+        return $this->walletRepository->getBalance($userId);
     }
 }

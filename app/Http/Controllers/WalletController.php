@@ -26,6 +26,18 @@ class WalletController extends BaseController
         ]);
         $this->walletService->create($createWalletDto);
         return $this->success('Wallet successfully created', ['success' => true, 'message' => 'Wallet successfully created', 'data' => null]);
+    }
 
+    public function balance(Request $request)
+    {
+        $userId = 1; //todo: get from auth middleware
+        $wallet = $this->walletService->getBalance($userId);
+        return $this->success('Wallet balance retrieved successfully', [
+            'success' => true,
+            'message' => 'Wallet balance retrieved successfully',
+            'data' => [
+                'balance' => $wallet->balance,
+            ],
+        ]);
     }
 }

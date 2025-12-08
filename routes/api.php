@@ -8,6 +8,7 @@ Route::prefix('users')->group(function () {
     Route::post('/', [UserController::class, 'create']);
     Route::prefix('wallet')->group(function ()  {
         Route::post('/', [WalletController::class, 'create']);
+        Route::get('/balance', [WalletController::class, 'balance']);
     })->middleware([]); //todo: add auth middlware
 });
 
