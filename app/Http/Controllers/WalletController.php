@@ -3,7 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\DTO\CreateWalletDTO;
+use App\DTO\TransferAmountDTO;
 use App\Http\Requests\CreateWalletRequest;
+use App\Http\Requests\TransferAmountRequest;
 use App\Http\Requests\UpdateWalletBalanceRequest;
 use App\Services\WalletService;
 use Illuminate\Http\Request;
@@ -70,6 +72,19 @@ class WalletController extends BaseController
             'data' => [
                 'balance' => $wallet->balance,
             ],
+        ]);
+    }
+
+    public function transfer(TransferAmountRequest $request)
+    {
+        $data = $request->validated();
+        $data['user_id'] = 1;
+
+        $this->walletService->transfer(TransferAmountDTO::createFromArray($data));
+        return $this->success('Transfer successful', [
+            'success' => true,
+            'message' => 'Transfer successful',
+            'data' => null,
         ]);
     }
 }

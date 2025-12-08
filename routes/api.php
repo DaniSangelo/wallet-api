@@ -11,6 +11,7 @@ Route::prefix('users')->group(function () {
         Route::get('/balance', [WalletController::class, 'balance']);
         Route::patch('/balance/add', [WalletController::class, 'addBalance']);
         Route::patch('/balance/withdraw', [WalletController::class, 'withdraw']);
+        Route::post('/balance/transfer', [WalletController::class, 'transfer']);
     })->middleware([]); //todo: add auth middlware
 });
 
