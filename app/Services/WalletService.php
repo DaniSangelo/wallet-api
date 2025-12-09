@@ -116,9 +116,4 @@ class WalletService
 
         return;
     }
-
-    public function transactions(int $userId)
-    {
-        return $this->walletRepository->transactions($userId);
-    }
 }

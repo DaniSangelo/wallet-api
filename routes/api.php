@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\TransactionController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\WalletController;
 use App\Http\Middleware\AuthMiddleware;
@@ -14,7 +15,7 @@ Route::prefix('users')->group(function () {
         Route::patch('/balance/add', [WalletController::class, 'addBalance']);
         Route::patch('/balance/withdraw', [WalletController::class, 'withdraw']);
         Route::post('/balance/transfer', [WalletController::class, 'transfer']);
-        Route::get('/transactions', [WalletController::class, 'transactions']);
+        Route::get('/transactions', [TransactionController::class, 'transactions']);
     });
 });
 

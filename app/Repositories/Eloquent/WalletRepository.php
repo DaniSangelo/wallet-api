@@ -4,7 +4,6 @@ namespace App\Repositories\Eloquent;
 
 use App\Contracts\Repositories\WalletRepositoryInterface;
 use App\DTO\CreateWalletDTO;
-use App\Models\Transaction;
 use App\Models\Wallet;
 
 class WalletRepository implements WalletRepositoryInterface
@@ -35,12 +34,5 @@ class WalletRepository implements WalletRepositoryInterface
         $wallet->balance += $amount;
         $wallet->save();
         return $wallet->refresh();
-    }
-
-    public function transactions(int $userId): mixed
-    {
-        return Transaction::whereHas('wallet', function ($query) use ($userId) {
-            $query->where('user_id', '=', $userId);
-        })->paginate()->items();
     }
 }

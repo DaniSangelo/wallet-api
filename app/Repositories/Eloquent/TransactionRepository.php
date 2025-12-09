@@ -12,4 +12,11 @@ class TransactionRepository implements TransactionRepositoryInterface
     {
         Transaction::create($createTransactionDTO->toArray())->save();
     }
+
+    public function transactions(int $userId): mixed
+    {
+        return Transaction::whereHas('wallet', function ($query) use ($userId) {
+            $query->where('user_id', '=', $userId);
+        })->paginate();
+    }
 }
