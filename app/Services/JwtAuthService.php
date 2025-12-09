@@ -4,9 +4,11 @@ namespace App\Services;
 
 use App\Contracts\Services\AuthInterface;
 use App\DTO\UserCredentialsDTO;
+use App\Exceptions\CustomException;
 use App\Models\User;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
+use Symfony\Component\HttpFoundation\Response;
 use Tymon\JWTAuth\Facades\JWTAuth;
 
 class JwtAuthService implements AuthInterface
@@ -17,7 +19,7 @@ class JwtAuthService implements AuthInterface
             return JWTAuth::user();
         };
 
-        return false;
+        throw new CustomException('Invalid credentials', Response::HTTP_UNAUTHORIZED);
     }
     public function logout(User $user): void
     {

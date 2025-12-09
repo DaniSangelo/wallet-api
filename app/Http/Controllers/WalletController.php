@@ -4,11 +4,14 @@ namespace App\Http\Controllers;
 
 use App\DTO\CreateWalletDTO;
 use App\DTO\TransferAmountDTO;
+use App\Exceptions\CustomException;
 use App\Http\Requests\CreateWalletRequest;
 use App\Http\Requests\TransferAmountRequest;
 use App\Http\Requests\UpdateWalletBalanceRequest;
 use App\Services\WalletService;
+use Exception;
 use Illuminate\Http\Request;
+use Symfony\Component\HttpFoundation\Response;
 
 class WalletController extends BaseController
 {
@@ -33,15 +36,33 @@ class WalletController extends BaseController
 
     public function balance(Request $request)
     {
-        $userId = $request->user()->id;
-        $wallet = $this->walletService->getBalance($userId);
-        return $this->success('Wallet balance retrieved successfully', [
-            'success' => true,
-            'message' => 'Wallet balance retrieved successfully',
-            'data' => [
-                'balance' => $wallet->balance,
-            ],
-        ]);
+        try {
+            $userId = $request->user()->id;
+
+            if (!$wallet = $this->walletService->getBalance($userId)) {
+                throw new CustomException('Wallet not found', Response::HTTP_NOT_FOUND);
+            };
+
+            return $this->success('Wallet balance retrieved successfully', [
+                'success' => true,
+                'message' => 'Wallet balance retrieved successfully',
+                'data' => [
+                    'balance' => $wallet->balance,
+                ],
+            ]);
+        } catch (CustomException $e) {
+            return $this->error('Wallet not found', [
+                'success' => false,
+                'message' => 'Wallet not found',
+                'data' => null,
+            ], $e->getCode());
+        } catch (Exception $e) {
+            return $this->error('Some error occurred on retrieve wallet balance', [
+                'success' => false,
+                'message' => 'Some error occurred on retrieve wallet balance',
+                'data' => null,
+            ], Response::HTTP_INTERNAL_SERVER_ERROR);
+        }
     }
 
     public function addBalance(UpdateWalletBalanceRequest $request)

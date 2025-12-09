@@ -4,10 +4,12 @@ namespace App\Services;
 
 use App\Contracts\Services\AuthInterface;
 use App\DTO\UserCredentialsDTO;
+use App\Exceptions\CustomException;
 use App\Models\User;
 use Exception;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
+use Symfony\Component\HttpFoundation\Response;
 
 class SanctumAuthService implements AuthInterface
 {
@@ -15,7 +17,7 @@ class SanctumAuthService implements AuthInterface
     {
         $user = Auth::attempt($credentials->toArray());
         if ($user) return Auth::user();
-        return false;
+        throw new CustomException('Invalid credentials', Response::HTTP_UNAUTHORIZED);
     }
 
     public function logout(User $user): void
