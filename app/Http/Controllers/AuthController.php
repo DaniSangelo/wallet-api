@@ -5,7 +5,6 @@ namespace App\Http\Controllers;
 use App\Contracts\Services\AuthInterface;
 use App\DTO\UserCredentialsDTO;
 use App\Http\Requests\LoginRequest;
-use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\Response;
 
 class AuthController extends BaseController
