@@ -123,4 +123,5 @@ return [
         'store' => env('APP_MAINTENANCE_STORE', 'database'),
     ],
 
+    'webhook_url' => env('WEBHOOK_URL'),
 ];

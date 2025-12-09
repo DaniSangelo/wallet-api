@@ -8,6 +8,7 @@ use App\Contracts\Repositories\WalletRepositoryInterface;
 use App\DTO\CreateTransactionDTO;
 use App\DTO\CreateWalletDTO;
 use App\DTO\TransferAmountDTO;
+use App\Events\UpdateTransactionHistoryEvent;
 use App\Exceptions\CustomException;
 use App\Models\Wallet;
 use App\TransactionTypeEnum;
@@ -104,17 +105,15 @@ class WalletService
             throw new CustomException('Not enough balance', Response::HTTP_BAD_REQUEST);
         }
 
-        $fromWallet = $this->walletRepository->updateBalance($fromWallet, $data->amount * -1);
-        $transactionDto = CreateTransactionDTO::createFromArray([
-            'user_id_to' => $user_id_to,
-            'wallet_id' => $fromWallet->id,
-            'user_id' => $fromWallet->user_id,
-            'type' => TransactionTypeEnum::DEBIT,
-            'amount' => $data->amount,
-        ]);
-        $this->transactionRepository->addTransaction($transactionDto);
+        event(new UpdateTransactionHistoryEvent(
+            $fromWallet,
+            $user_id_to,
+            $wallet,
+            $data->amount,
+            $this->walletRepository,
+            $this->transactionRepository,
+        ));
 
-        $wallet = $this->walletRepository->updateBalance($wallet, $data->amount);
         return;
     }
 
