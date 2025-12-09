@@ -127,6 +127,20 @@
 								"packages": {},
 								"requests": {}
 							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"    const responseJson = pm.response.json();\r",
+									"    const accessToken = responseJson.data.access_token;\r",
+									"\r",
+									"    pm.collectionVariables.set(\"access_token\", accessToken);"
+								],
+								"type": "text/javascript",
+								"packages": {},
+								"requests": {}
+							}
 						}
 					],
 					"request": {
@@ -188,6 +202,134 @@
 								"{{baseUrl}}",
 								"users",
 								"wallet"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "2.get-wallet-balance",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{host}}/{{baseUrl}}/users/wallet/balance",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"{{baseUrl}}",
+								"users",
+								"wallet",
+								"balance"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "3.update-wallet-balance",
+					"request": {
+						"method": "PATCH",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"amount\": 45\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{host}}/{{baseUrl}}/users/wallet/balance/add",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"{{baseUrl}}",
+								"users",
+								"wallet",
+								"balance",
+								"add"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "4.update-wallet-balance",
+					"request": {
+						"method": "PATCH",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"amount\": 1\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{host}}/{{baseUrl}}/users/wallet/balance/withdraw",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"{{baseUrl}}",
+								"users",
+								"wallet",
+								"balance",
+								"withdraw"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "5.tranfer-amount-between-users",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"amount\": 30,\r\n    \"to_email\": \"fay.effertz@example.org\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{host}}/{{baseUrl}}/users/wallet/balance/transfer",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"{{baseUrl}}",
+								"users",
+								"wallet",
+								"balance",
+								"transfer"
 							]
 						}
 					},

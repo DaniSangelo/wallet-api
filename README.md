@@ -2,6 +2,21 @@
 
 Uma API RESTful desenvolvida em Laravel para gerenciamento de carteiras digitais, usuários e transações financeiras.
 
+## Considerações iniciais
+Removi o .env do .gitignore por conveniência e para facilitar os testes.
+
+A coleção do Postman está disponível no repositório. Dessa forma, pode ser utilizada para os testes.
+
+Para simular o webhook, foi utilizado o recurso de MockServer do próprio Postman. Para habilitá-lo, é simples:
+  1. Abra o Postman e clique no ícone:
+    ![alt text](image.png)
+  2. Habilite o MockServer caso não esteja habilitado
+    ![alt text](image-1.png)
+  3. Crie um mockserver
+    ![alt text](image-2.png)
+  4. Copie a url e cole na variável de ambiente WEBHOOK_URL
+    ![alt text](image-3.png)
+
 ## 🚀 Funcionalidades
 
 - **Gerenciamento de Usuários**: Cadastro de novos usuários.
@@ -62,9 +77,10 @@ php artisan migrate
 php artisan db:seed
 ```
 
-7. Inicie o servidor de desenvolvimento:
+7. Inicie o servidor de desenvolvimento e o worker para processar os jobs:
 ```bash
 php artisan serve
+php artisan queue:work
 ```
 A API estará disponível em `http://localhost:8000`.
 
