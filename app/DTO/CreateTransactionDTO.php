@@ -2,7 +2,7 @@
 
 namespace App\DTO;
 
-use App\TransactionTypeEnum;
+use App\Enums\TransactionTypeEnum;
 
 class CreateTransactionDTO extends DTO
 {

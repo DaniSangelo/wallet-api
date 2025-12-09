@@ -11,7 +11,7 @@ use App\DTO\TransferAmountDTO;
 use App\Events\UpdateTransactionHistoryEvent;
 use App\Exceptions\CustomException;
 use App\Models\Wallet;
-use App\TransactionTypeEnum;
+use App\Enums\TransactionTypeEnum;
 use Exception;
 use Symfony\Component\HttpFoundation\Response;
 

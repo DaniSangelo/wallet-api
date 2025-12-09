@@ -6,7 +6,7 @@ use App\Contracts\Repositories\TransactionRepositoryInterface;
 use App\Contracts\Repositories\WalletRepositoryInterface;
 use App\DTO\CreateTransactionDTO;
 use App\Models\Wallet;
-use App\TransactionTypeEnum;
+use App\Enums\TransactionTypeEnum;
 use Exception;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Queue\Queueable;
