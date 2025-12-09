@@ -33,7 +33,7 @@ class WalletService
 
     public function create(CreateWalletDTO $data)
     {
-        $wallet = $this->walletRepository->alreadyHasWallet($data->user_id);
+        $wallet = $this->walletRepository->getWalletByUser($data->user_id);
         if (!blank($wallet)) {
             return $this->walletRepository->restore($wallet);
         }
@@ -48,7 +48,7 @@ class WalletService
 
     public function addBalance(int $userId, float $amount): ?Wallet
     {
-        $wallet = $this->walletRepository->alreadyHasWallet($userId);
+        $wallet = $this->walletRepository->getWalletByUser($userId);
         if (blank($wallet) || $wallet->trashed()) {
             throw new CustomException('Wallet does not exist or is deleted', Response::HTTP_BAD_REQUEST);
         }
@@ -65,7 +65,7 @@ class WalletService
 
     public function withdraw(int $userId, float $amount): ?Wallet
     {
-        $wallet = $this->walletRepository->alreadyHasWallet($userId);
+        $wallet = $this->walletRepository->getWalletByUser($userId);
         if (!$this->hasEnoughtBalance($wallet, $amount)) {
             throw new CustomException('Not enough balance', Response::HTTP_BAD_REQUEST);
         }
@@ -94,12 +94,12 @@ class WalletService
     {
         $user_id_to = $this->userRepository->getByEmail($data->to_email)->id;
 
-        $wallet = $this->walletRepository->alreadyHasWallet($user_id_to);
+        $wallet = $this->walletRepository->getWalletByUser($user_id_to);
         if (blank($wallet) || $wallet->trashed()) {
             throw new CustomException('Destinatary wallet does not exist or is deleted', Response::HTTP_BAD_REQUEST);
         }
 
-        $fromWallet = $this->walletRepository->alreadyHasWallet($data->user_id);
+        $fromWallet = $this->walletRepository->getWalletByUser($data->user_id);
 
         if (!$this->hasEnoughtBalance($fromWallet, $data->amount)) {
             throw new CustomException('Not enough balance', Response::HTTP_BAD_REQUEST);

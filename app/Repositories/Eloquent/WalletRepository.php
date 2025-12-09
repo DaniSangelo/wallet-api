@@ -14,7 +14,7 @@ class WalletRepository implements WalletRepositoryInterface
         return Wallet::create($data->toArray());
     }
 
-    public function alreadyHasWallet(int $userId): ?Wallet
+    public function getWalletByUser(int $userId): ?Wallet
     {
         return Wallet::where('user_id', $userId)->withTrashed()->first();
     }
@@ -39,7 +39,7 @@ class WalletRepository implements WalletRepositoryInterface
 
     public function transactions(int $userId): mixed
     {
-        return Transaction::whereHas('wallet', function($query) use ($userId) {
+        return Transaction::whereHas('wallet', function ($query) use ($userId) {
             $query->where('user_id', '=', $userId);
         })->paginate()->items();
     }
