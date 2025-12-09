@@ -4,6 +4,7 @@ namespace App\Providers;
 
 use App\Contracts\Services\AuthInterface;
 use App\Services\JwtAuthService;
+use App\Services\SanctumAuthService;
 use Illuminate\Support\ServiceProvider;
 
 class AuthServiceProvider extends ServiceProvider
@@ -15,7 +16,7 @@ class AuthServiceProvider extends ServiceProvider
     {
         $concreteImplementation = match (config('auth.driver')) {
             'jwt' => JwtAuthService::class,
-            // 'sanctum' => '',
+            'sanctum' => SanctumAuthService::class,
             default => JwtAuthService::class,
         };
 

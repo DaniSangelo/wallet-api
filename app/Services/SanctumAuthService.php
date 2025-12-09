@@ -5,42 +5,45 @@ namespace App\Services;
 use App\Contracts\Services\AuthInterface;
 use App\DTO\UserCredentialsDTO;
 use App\Models\User;
+use Exception;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
-use Tymon\JWTAuth\Facades\JWTAuth;
 
-class JwtAuthService implements AuthInterface
+class SanctumAuthService implements AuthInterface
 {
     public function login(UserCredentialsDTO $credentials): User|bool
     {
-        if (JWTAuth::attempt($credentials->toArray())) {
-            return JWTAuth::user();
-        };
-
+        $user = Auth::attempt($credentials->toArray());
+        if ($user) return Auth::user();
         return false;
     }
+
     public function logout(User $user): void
     {
-        JWTAuth::invalidate(JWTAuth::getToken());
+        $user->currentAccessToken()->delete();
     }
+
     public function refresh(User $user): string
     {
-        return JWTAuth::refresh(JWTAuth::getToken());
+        $user->currentAccessToken()->delete();
+        return $this->createToken($user);
     }
+
     public function authenticate(): ?User
     {
         try {
-            $user = JWTAuth::parseToken()->authenticate();
+            $user = Auth::guard('sanctum')->user();
             if (!$user) return null;
             Auth::setUser($user);
-            return Auth::user();
-        } catch (\Exception $e) {
-            Log::error('Authentication failed', ['message' => $e->getMessage()]);
+            return $user;
+        } catch (Exception $e) {
+            Log::error('Error on sanctum authentication', ['message' => $e->getMessage()]);
             return null;
         }
     }
+
     public function createToken(User $user): string
     {
-        return JWTAuth::fromUser($user);
+        return $user->createToken('access_token')->plainTextToken;
     }
 }

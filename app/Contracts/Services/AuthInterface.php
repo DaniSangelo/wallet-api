@@ -7,7 +7,7 @@ use App\Models\User;
 
 interface AuthInterface
 {
-    public function login(UserCredentialsDTO $credentials): string;
+    public function login(UserCredentialsDTO $credentials): User|bool;
     public function logout(User $user): void;
     public function refresh(User $user): string;
     public function authenticate(): ?User;

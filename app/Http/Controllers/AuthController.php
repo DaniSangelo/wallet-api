@@ -20,7 +20,8 @@ class AuthController extends BaseController
     {
         $data = $request->validated();
         $credentials = UserCredentialsDTO::createFromArray($data);
-        $token = $this->authService->login($credentials);
+        $user = $this->authService->login($credentials);
+        $token = $this->authService->createToken($user);
         return $this->success('Login successful', ['success' => true, 'message' => 'Login successful', 'data' => ['access_token' => $token]]);
     }
 
